@@ -4,13 +4,13 @@ def input_students
     # create an empty array
     students = []
     # get the first name
-    name = gets.chomp
+    name = gets.chomp.capitalize
     # while name is not empty, repeat this code
     while !name.empty? do
       students << {name: name, cohort: :november}
       puts "We now have #{students.count} students."
       # get another name from the user
-      name = gets.chomp
+      name = gets.chomp.capitalize
     end
     # return array of students
     students
@@ -21,11 +21,21 @@ def print_header
   puts "----------"
 end
 
-def print(students)
-  students.each_with_index do |student, index|
-    index = index + 1
-    puts "#{index}. #{student[:name]} (#{student[:cohort]} cohort)"
+def search_letter(students)
+  puts "What letter do you want to search?"
+  letter = gets.chomp.upcase
+  puts "Here are the students that start with '#{letter}':"
+  students.each do |student|
+    if (student[:name].start_with? letter)
+      puts "#{student[:name]} (#{student[:cohort]} cohort)"
+    end
   end
+end
+
+def print(students)
+   students.each_with_index do |student, index|
+     puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort)"
+   end
 end
 
 def print_footer(students)
@@ -36,3 +46,4 @@ students = input_students
 print_header
 print(students)
 print_footer(students)
+search_letter(students)
