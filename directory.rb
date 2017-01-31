@@ -32,6 +32,17 @@ def search_letter(students)
   end
 end
 
+def short_name(students)
+  puts "-" * 10
+  puts "These are our students with less than 12 characters in their name:"
+  students.each do |student|
+    length = student[:name].length
+    if length <= 12
+      puts "#{student[:name]} (#{student[:cohort]} cohort)"
+    end
+  end
+end
+
 def print(students)
    students.each_with_index do |student, index|
      puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort)"
@@ -44,6 +55,7 @@ end
 #nothing happens until we call the methods
 students = input_students
 print_header
-print(students)
+#print(students)
+short_name(students)
 print_footer(students)
-search_letter(students)
+#search_letter(students)
