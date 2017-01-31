@@ -7,13 +7,46 @@ def input_students
     name = gets.chomp
     # while name is not empty, repeat this code
     while !name.empty? do
-      students << {name: name, cohort: :november}
+      students << {name: name}
       puts "We now have #{students.count} students."
       # get another name from the user
       name = gets.chomp.capitalize
     end
     # return array of students
     students
+end
+
+# Tried to get it to as the question then move to input_cohort to as if correct. So if 'N' it could loop back through here!
+# def cohort_enter(students)
+#   students.each do |stu|
+#     puts "Please enter the cohort for #{stu[:name]}"
+#     stu[:cohort] = gets.chomp
+#     if stu[:cohort].empty?
+#       stu[:cohort] = "None Entered"
+#     end
+#   end
+#   input_cohort(students)
+# end
+
+def input_cohort(students)
+  students.each do |student|
+    puts "Please enter the cohort for #{student[:name]}"
+    cohort = gets.chomp
+    puts "You entered '#{cohort}', is this correct?"
+    puts "Enter Y for yes or N for no."
+    correct = gets.chomp.upcase
+    until (correct == 'Y' || correct == 'N')
+      puts "Enter Y for yes or N for no."
+      correct = gets.chomp.upcase
+    end
+    if correct == "Y"
+      student[:cohort] = cohort
+    else correct == "N"
+      puts "Please enter the cohort for #{student[:name]}"
+      cohort = gets.chomp
+      student[:cohort] = cohort
+    end
+  end
 end
 
 def student_information(students)
@@ -93,10 +126,8 @@ def print_footer(students)
 end
 #nothing happens until we call the methods
 students = input_students
+input_cohort(students)
 student_information(students)
-
 print_header
 print_redo(students)
-#short_name(students)
 print_footer(students)
-#search_letter(students)
