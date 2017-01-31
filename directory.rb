@@ -43,10 +43,14 @@ def short_name(students)
   end
 end
 
-def print(students)
-   students.each_with_index do |student, index|
-     puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort)"
-   end
+def print_redo(students)
+  count = 0
+  while (count < 1)
+    students.each_with_index do |student, index|
+      puts "#{index +1}. #{student[:name]} (#{student[:cohort]} cohort)"
+      count += 1
+    end
+  end
 end
 
 def print_footer(students)
@@ -55,7 +59,7 @@ end
 #nothing happens until we call the methods
 students = input_students
 print_header
-#print(students)
-short_name(students)
+print_redo(students)
+#short_name(students)
 print_footer(students)
 #search_letter(students)
