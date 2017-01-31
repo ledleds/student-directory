@@ -4,7 +4,7 @@ def input_students
     # create an empty array
     students = []
     # get the first name
-    name = gets.chomp.capitalize
+    name = gets.chomp
     # while name is not empty, repeat this code
     while !name.empty? do
       students << {name: name, cohort: :november}
@@ -14,6 +14,36 @@ def input_students
     end
     # return array of students
     students
+end
+
+def student_information(students)
+  students.each do |student|
+    # Enter country information
+    puts "Add additional information regarding your student: #{student[:name]}"
+    puts "Enter country of birth:"
+    country = gets.chomp.capitalize
+    if country.empty?
+      student[:country] = "None Entered"
+    else
+      student[:country] = country
+    end
+    # Enter Height information
+    puts "Enter height (cm):"
+    height = gets.chomp
+    if height.empty?
+      student[:height] = "None Entered"
+    else
+      student[:height] = height
+    end
+    # Enter hobbies information (Can only get it to work on one line :( )
+    puts "Enter hobbies:"
+    hobbies = gets.chomp
+    if hobbies.empty?
+      student[:hobbies] = "None Entered"
+    else
+      student[:hobbies] = hobbies
+    end
+  end
 end
 
 def print_header
@@ -48,6 +78,8 @@ def print_redo(students)
   while (count < 1)
     students.each_with_index do |student, index|
       puts "#{index +1}. #{student[:name]} (#{student[:cohort]} cohort)"
+      puts "-" * 3
+      puts "Additional student information:\nCountry: #{student[:country]}\nHeight: #{student[:height]}\nHobbies: #{student[:hobbies]}\n"
       count += 1
     end
   end
@@ -58,6 +90,8 @@ def print_footer(students)
 end
 #nothing happens until we call the methods
 students = input_students
+student_information(students)
+
 print_header
 print_redo(students)
 #short_name(students)
