@@ -78,8 +78,11 @@ def print_redo(students)
   while (count < 1)
     students.each_with_index do |student, index|
       puts "#{index +1}. #{student[:name]} (#{student[:cohort]} cohort)"
-      puts "-" * 3
-      puts "Additional student information:\nCountry: #{student[:country]}\nHeight: #{student[:height]}\nHobbies: #{student[:hobbies]}\n"
+      puts "--------------------------".center(29)
+      puts "Additional student information:"
+      puts "Country: #{student[:country]}".center(29)
+      puts "Height: #{student[:height]}".center(30)
+      puts "Hobbies: #{student[:hobbies]}\n".center(31)
       count += 1
     end
   end
