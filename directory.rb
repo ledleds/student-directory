@@ -141,12 +141,32 @@ def print_footer(students)
   end
 end
 
-students = input_students
-input_cohort(students)
-student_information(students)
+def interactive_menu
+  students = []
+  loop do
+    puts "1. Input the students"
+    puts "2. Show the students"
+    puts "9. Exit"
+    selection = gets.chomp
+    case selection
+    when "1"
+      # Input students
+      students = input_students
+    when "2"
+      # Show the students
+      print_header
+      print_redo(students)
+      print_footer(students)
+    when "9"
+      exit #This causes the programme to terminate
+    else
+      puts "I don't know what you meant, try again."
+    end
+  end
+end
 
+interactive_menu
 print_header
-#jan_cohort(students)
 print_redo(students)
 print_information(students)
 print_footer(students)
