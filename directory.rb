@@ -4,18 +4,18 @@ def input_students
     # create an empty array
     students = []
     # get the first name
-    name = gets.chomp
+    name = gets.strip
     # while name is not empty, repeat this code
     while !name.empty? do
       students << {name: name}
       count = students.count
       if count == 1
-        puts "We now have #{students.count} student."
+        puts "We now have #{count} student."
       else count > 1
-        puts "We now have #{students.count} students."
+        puts "We now have #{count} students."
       end
       # get another name from the user
-      name = gets.chomp.capitalize
+      name = gets.strip
     end
     # return array of students
     students
@@ -24,21 +24,21 @@ end
 def input_cohort(students)
   students.each do |student|
     puts "Please enter the cohort for #{student[:name]}"
-    cohort = gets.chomp.capitalize
+    cohort = gets.strip.capitalize
 
     puts "You entered '#{cohort}', is this correct?"
     puts "Enter Y for yes or N for no."
-    correct = gets.chomp.upcase
+    correct = gets.strip.upcase
 
     until (correct == 'Y' || correct == 'N')
       puts "Enter Y for yes or N for no."
-      correct = gets.chomp.upcase
+      correct = gets.strip.upcase
     end
     if correct == "Y"
       student[:cohort] = cohort
     else correct == "N"
       puts "Please enter the cohort for #{student[:name]}"
-      cohort = gets.chomp.capitalize
+      cohort = gets.strip.capitalize
       student[:cohort] = cohort
     end
   end
@@ -56,7 +56,7 @@ def student_information(students)
     # Enter country information
     puts "Add additional information regarding your student: #{student[:name]}"
     puts "Enter country of birth:"
-    country = gets.chomp.capitalize
+    country = gets.strip.capitalize
     if country.empty?
       student[:country] = "None Entered"
     else
@@ -64,7 +64,7 @@ def student_information(students)
     end
     # Enter Height information
     puts "Enter height (cm):"
-    height = gets.chomp
+    height = gets.strip
     if height.empty?
       student[:height] = "None Entered"
     else
@@ -72,7 +72,7 @@ def student_information(students)
     end
     # Enter hobbies information (Can only get it to work on one line :( )
     puts "Enter hobbies:"
-    hobbies = gets.chomp
+    hobbies = gets.strip
     if hobbies.empty?
       student[:hobbies] = "None Entered"
     else
@@ -88,7 +88,7 @@ end
 
 def search_letter(students)
   puts "What letter do you want to search?"
-  letter = gets.chomp.upcase
+  letter = gets.strip.upcase
   puts "Here are the students that start with '#{letter}':"
   students.each do |student|
     if (student[:name].start_with? letter)
