@@ -16,25 +16,15 @@ def input_students
     students
 end
 
-# Tried to get it to as the question then move to input_cohort to as if correct. So if 'N' it could loop back through here!
-# def cohort_enter(students)
-#   students.each do |stu|
-#     puts "Please enter the cohort for #{stu[:name]}"
-#     stu[:cohort] = gets.chomp
-#     if stu[:cohort].empty?
-#       stu[:cohort] = "None Entered"
-#     end
-#   end
-#   input_cohort(students)
-# end
-
 def input_cohort(students)
   students.each do |student|
     puts "Please enter the cohort for #{student[:name]}"
-    cohort = gets.chomp
+    cohort = gets.chomp.capitalize
+
     puts "You entered '#{cohort}', is this correct?"
     puts "Enter Y for yes or N for no."
     correct = gets.chomp.upcase
+
     until (correct == 'Y' || correct == 'N')
       puts "Enter Y for yes or N for no."
       correct = gets.chomp.upcase
@@ -43,9 +33,16 @@ def input_cohort(students)
       student[:cohort] = cohort
     else correct == "N"
       puts "Please enter the cohort for #{student[:name]}"
-      cohort = gets.chomp
+      cohort = gets.chomp.capitalize
       student[:cohort] = cohort
     end
+  end
+end
+
+def jan_cohort(students)
+  puts "These are the students in the January cohort:"
+  students.select {|student| student[:cohort] == "Jan" || student[:cohort] == "January" }.each_with_index do |student, index|
+    puts "#{index +1}. #{student[:name]} (#{student[:cohort]} cohort)".center(29)
   end
 end
 
@@ -124,10 +121,11 @@ end
 def print_footer(students)
   puts "Overall, we have #{students.count} great students."
 end
-#nothing happens until we call the methods
+
 students = input_students
 input_cohort(students)
-student_information(students)
+#student_information(students)
 print_header
-print_redo(students)
+jan_cohort(students)
+#print_redo(students)
 print_footer(students)
