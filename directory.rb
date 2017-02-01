@@ -1,7 +1,18 @@
-@students = [] # an empty array accesible to all methods
+@students = [] # an empty array accessible to all methods
+def try_load_students
+  filename = ARGV.first # first argument from the command line
+  return if filename.nil? # get out of the method if it isn't given
+  if File.exists?(filename) # if it exists
+    load_students(filename)
+    puts "Loaded #{@students.count} from #{filename}"
+  else # if it doesn't exist
+    puts "Sorry #{filename} doesn't exist"
+    exit
+  end
+end
 
-def load_students
-  file = File.open("students.csv", "r")
+def load_students(filename = "students.csv")
+  file = File.open(filename, "r")
   file.readlines.each do |line|
     name, cohort = line.chomp.split(',')
     @students << {name: name, cohort: cohort.to_sym}
@@ -12,7 +23,7 @@ end
 def interactive_menu
   loop do
     print_menu
-    process(gets.chomp)
+    process($stdin.gets.chomp)
   end
 end
 
@@ -51,7 +62,7 @@ def input_students
     puts "Please enter the names of the students."
     puts "To finish, just hit return twice."
     # get the first name
-    name = gets.strip
+    name = $stdin.gets.strip
     # while name is not empty, repeat this code
     while !name.empty? do
       @students << {name: name}
@@ -62,7 +73,7 @@ def input_students
         puts "We now have #{count} students."
       end
       # get another name from the user
-      name = gets.strip
+      name = $stdin.gets.strip
     end
     input_cohort
 end
@@ -70,21 +81,21 @@ end
 def input_cohort
   @students.each do |student|
     puts "Please enter the cohort for #{student[:name]}"
-    cohort = gets.strip.capitalize
+    cohort = $stdin.gets.strip.capitalize
 
     puts "You entered '#{cohort}', is this correct?"
     puts "Enter Y for yes or N for no."
-    correct = gets.strip.upcase
+    correct = $stdin.gets.strip.upcase
 
     until (correct == 'Y' || correct == 'N')
       puts "Enter Y for yes or N for no."
-      correct = gets.strip.upcase
+      correct = $stdin.gets.strip.upcase
     end
     if correct == "Y"
       student[:cohort] = cohort
     else correct == "N"
       puts "Please enter the cohort for #{student[:name]}"
-      cohort = gets.strip.capitalize
+      cohort = $stdin.gets.strip.capitalize
       student[:cohort] = cohort
     end
   end
@@ -102,7 +113,7 @@ def student_information
     # Enter country information
     puts "Add additional information regarding your student: #{student[:name]}"
     puts "Enter country of birth:"
-    country = gets.strip.capitalize
+    country = $stdin.gets.strip.capitalize
     if country.empty?
       student[:country] = "None Entered"
     else
@@ -110,7 +121,7 @@ def student_information
     end
     # Enter Height information
     puts "Enter height (cm):"
-    height = gets.strip
+    height = $stdin.gets.strip
     if height.empty?
       student[:height] = "None Entered"
     else
@@ -118,7 +129,7 @@ def student_information
     end
     # Enter hobbies information (Can only get it to work on one line :( )
     puts "Enter hobbies:"
-    hobbies = gets.strip
+    hobbies = $stdin.gets.strip
     if hobbies.empty?
       student[:hobbies] = "None Entered"
     else
@@ -134,7 +145,7 @@ end
 
 def search_letter
   puts "What letter do you want to search?"
-  letter = gets.strip.upcase
+  letter = $stdin.gets.strip.upcase
   puts "Here are the students that start with '#{letter}':"
   @students.each do |student|
     if (student[:name].start_with? letter)
