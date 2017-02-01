@@ -109,17 +109,24 @@ def short_name(students)
 end
 
 def print_redo(students)
-  count = 0
-  while (count < 1)
+  student_count = students.count
+  if student_count == 0
+    puts "No students were inputted."
+  else
     students.each_with_index do |student, index|
       puts "#{index +1}. #{student[:name]} (#{student[:cohort]} cohort)"
-      puts "--------------------------".center(29)
-      puts "Additional student information:"
-      puts "Country: #{student[:country]}".center(29)
-      puts "Height: #{student[:height]}".center(30)
-      puts "Hobbies: #{student[:hobbies]}\n".center(31)
-      count += 1
     end
+  end
+end
+
+def print_information(students)
+  students.each do |student|
+    puts "--------------------------".center(29)
+    puts "#{student[:name]}".center(29)
+    puts "Additional student information:"
+    puts "Country: #{student[:country]}".center(29)
+    puts "Height: #{student[:height]}".center(30)
+    puts "Hobbies: #{student[:hobbies]}\n".center(31)
   end
 end
 
@@ -127,6 +134,8 @@ def print_footer(students)
   count = students.count
   if count == 1
     puts "Overall, we have #{count} great student."
+  elsif count == 0
+    puts ''
   else count > 1
     puts "Overall, we have #{students.count} great students."
   end
@@ -134,8 +143,10 @@ end
 
 students = input_students
 input_cohort(students)
-#student_information(students)
+student_information(students)
+
 print_header
-jan_cohort(students)
-#print_redo(students)
+#jan_cohort(students)
+print_redo(students)
+print_information(students)
 print_footer(students)
