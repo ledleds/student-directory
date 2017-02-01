@@ -8,7 +8,12 @@ def input_students
     # while name is not empty, repeat this code
     while !name.empty? do
       students << {name: name}
-      puts "We now have #{students.count} students."
+      count = students.count
+      if count == 1
+        puts "We now have #{students.count} student."
+      else count > 1
+        puts "We now have #{students.count} students."
+      end
       # get another name from the user
       name = gets.chomp.capitalize
     end
@@ -119,7 +124,12 @@ def print_redo(students)
 end
 
 def print_footer(students)
-  puts "Overall, we have #{students.count} great students."
+  count = students.count
+  if count == 1
+    puts "Overall, we have #{count} great student."
+  else count > 1
+    puts "Overall, we have #{students.count} great students."
+  end
 end
 
 students = input_students
