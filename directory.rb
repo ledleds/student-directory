@@ -20,13 +20,17 @@ def process(selection)
   when "1"
     input_students
   when "2"
+    puts "Loading students..."
     show_students
   when "3"
+    puts "Saving file..."
     save_students
   when "4"
+    puts "Loading students..."
     load_students
   when "9"
-    exit #This causes the programme to terminate
+    puts "Exiting program"
+    exit #This causes the program to terminate
   else
     puts "I don't know what you meant, try again."
   end
@@ -50,6 +54,23 @@ def input_students
       name = STDIN.gets.strip
     end
     input_cohort
+end
+
+def input_cohort
+  @students.each do |student|
+    puts "Please enter the cohort for #{student[:name]}"
+    cohort = STDIN.gets.strip.capitalize
+    puts "You entered #{cohort}, is this correct? If not enter the correct cohort:"
+    check = STDIN.gets.chomp
+    while check.empty?
+      puts "Saved"
+      student[:cohort] = cohort
+      break
+      if !check.empty?
+        input_cohort
+      end
+    end
+  end
 end
 
 def show_students
@@ -92,6 +113,7 @@ def save_students
     csv_line = student_data.join(",")
     file.puts csv_line
   end
+  puts "File saved"
   file.close
 end
 
@@ -115,23 +137,6 @@ def try_load_students
   else # if it doesn't exist
     puts "Sorry, #{filename} doesn't exist"
     exit
-  end
-end
-
-def input_cohort
-  @students.each do |student|
-    puts "Please enter the cohort for #{student[:name]}"
-    cohort = STDIN.gets.strip.capitalize
-    puts "You entered #{cohort}, is this correct? If not enter the correct cohort:"
-    check = STDIN.gets.chomp
-    while check.empty?
-      puts "Saved"
-      student[:cohort] = cohort
-      break
-      if !check.empty?
-        input_cohort
-      end
-    end
   end
 end
 
