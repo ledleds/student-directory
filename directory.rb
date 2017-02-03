@@ -1,4 +1,6 @@
 @students = [] # an empty array accessible to all methods
+require 'csv'
+require 'Date'
 
 def print_menu
   puts "1. Input the students"
@@ -38,8 +40,6 @@ def process(selection)
     puts "I don't know what you meant, try again."
   end
 end
-
-require 'Date'
 
 def input_students
   puts "Please enter the names of the students."
@@ -107,27 +107,22 @@ def print_footer
 end
 
 def save_students
-  puts "What would you like to name your file? (No need to add the file extension)"
+  puts "What would you like to name your file? (Including file extension)"
   filename = STDIN.gets.chomp
-  #open the file for writing
-  file = File.open(filename + ".csv", "w") do |file|
-  #iterate over the array of students
-    @students.each do |student|
-      student_data = [student[:name], student[:cohort]]
-      csv_line = student_data.join(",")
-      file.puts csv_line
+  #opens up the filename given by the user, sets it to write permissions. Iterates over the file...
+  CSV.open(filename, "w") do |file|
+  # then iterates over @students and appends the values of the array into the csv file.
+    @students.each do |students|
+      file << students.values
     end
   end
-  puts "#{filename}.csv was saved."
+  puts "#{filename} was saved."
 end
 
 def load_students(filename = "students.csv")
   @students = []
-  File.open(filename, "r") do |file|
-    file.readlines.each do |line|
-      name, cohort = line.chomp.split(',')
-      add_to_students(name, cohort)
-    end
+  CSV.open(filename, "r") do |file|
+    file.to_a.map {|name, cohort| add_to_students(name, cohort)}
   end
   puts "Loading #{filename}"
 end
