@@ -1,51 +1,4 @@
 @students = [] # an empty array accessible to all methods
-def try_load_students
-  filename = ARGV.first # first argument from the command line
-  return if filename.nil? # get out of the method if it isn't given
-  if File.exists?(filename) # if it exists
-    load_students(filename)
-    puts "Loaded #{@students.count} from #{filename}"
-  else # if it doesn't exist
-    puts "Sorry #{filename} doesn't exist"
-    exit
-  end
-end
-
-def load_students(filename = "students.csv")
-  file = File.open(filename, "r")
-  file.readlines.each do |line|
-    name, cohort = line.chomp.split(',')
-    @students << {name: name, cohort: cohort.to_sym}
-  end
-  file.close
-end
-
-def input_students
-    puts "Please enter the names of the students."
-    puts "To finish, just hit return twice."
-    # get the first name
-    name = $stdin.gets.strip
-    # while name is not empty, repeat this code
-    while !name.empty? do
-      @students << {name: name}
-      count = @students.count
-      if count == 1
-        puts "We now have #{count} student."
-      else count > 1
-        puts "We now have #{count} students."
-      end
-      # get another name from the user
-      name = $stdin.gets.strip
-    end
-    input_cohort
-end
-
-def interactive_menu
-  loop do
-    print_menu
-    process($stdin.gets.chomp)
-  end
-end
 
 def print_menu
   puts "1. Input the students"
@@ -53,6 +6,13 @@ def print_menu
   puts "3. Save the list to students.csv"
   puts "4. Load the list from students.csv"
   puts "9. Exit"
+end
+
+def interactive_menu
+  loop do
+    print_menu
+    process(STDIN.gets.chomp)
+  end
 end
 
 def process(selection)
@@ -72,18 +32,98 @@ def process(selection)
   end
 end
 
+def input_students
+    puts "Please enter the names of the students."
+    puts "To finish, just hit return twice."
+    # get the first name
+    name = STDIN.gets.strip
+    # while name is not empty, repeat this code
+    while !name.empty? do
+      @students << {name: name}
+      count = @students.count
+      if count == 1
+        puts "We now have #{count} student."
+      else count > 1
+        puts "We now have #{count} students."
+      end
+      # get another name from the user
+      name = STDIN.gets.strip
+    end
+    input_cohort
+end
+
 def show_students
   print_header
-  print_students_list
+  print_student_list
   print_footer
+end
+
+def print_header
+  puts "The students of Villans Academy"
+  puts "----------"
+end
+
+def print_student_list
+  student_count = @students.count
+  if student_count == 0
+    puts "No students were inputted."
+  else
+    @students.each_with_index do |student, index|
+      puts "#{index +1}. #{student[:name]} (#{student[:cohort]} cohort)"
+    end
+  end
+end
+
+def print_footer
+  count = @students.count
+  if count == 1
+    puts "Overall, we have 1 great student."
+  else
+    puts "Overall, we have #{@students.count} great students."
+  end
+end
+
+def save_students
+  #open the file for writing
+  file = File.open("students.csv", "w")
+  #iterate over the array of students
+  @students.each do |student|
+    student_data = [student[:name], student[:cohort]]
+    csv_line = student_data.join(",")
+    file.puts csv_line
+  end
+  file.close
+end
+
+def load_students(filename = "students.csv")
+  file = File.open(filename, "r")
+  file.readlines.each do |line|
+  name, cohort = line.chomp.split(',')
+    @students << {name: name, cohort: cohort.to_sym}
+  end
+  file.close
+end
+
+def try_load_students
+  filename = ARGV.first # first argument from the command line
+  if filename.nil?
+    filename = "students.csv"
+  end
+  if File.exists?(filename) # if it exists
+    load_students(filename)
+    puts "Loaded #{@students.count} from #{filename}"
+  else # if it doesn't exist
+    puts "Sorry, #{filename} doesn't exist"
+    exit
+  end
 end
 
 def input_cohort
   @students.each do |student|
     puts "Please enter the cohort for #{student[:name]}"
-    cohort = $stdin.gets.strip.capitalize
+    cohort = STDIN.gets.strip.capitalize
     puts "You entered #{cohort}, is this correct? If not enter the correct cohort:"
-    check = $stdin.gets.chomp
+    check = STDIN.gets.chomp
     while check.empty?
       puts "Saved"
       student[:cohort] = cohort
@@ -94,29 +134,6 @@ def input_cohort
     end
   end
 end
-
-# def input_cohort
-#   @students.each do |student|
-#     puts "Please enter the cohort for #{student[:name]}"
-#     cohort = $stdin.gets.strip.capitalize
-#
-#     puts "You entered '#{cohort}', is this correct?"
-#     puts "Enter Y for yes or N for no."
-#     correct = $stdin.gets.strip.upcase
-#
-#     until (correct == 'Y' || correct == 'N')
-#       puts "Enter Y for yes or N for no."
-#       correct = $stdin.gets.strip.upcase
-#     end
-#     if correct == "Y"
-#       student[:cohort] = cohort
-#     else correct == "N"
-#       puts "Please enter the cohort for #{student[:name]}"
-#       cohort = $stdin.gets.strip.capitalize
-#       student[:cohort] = cohort
-#     end
-#   end
-# end
 
 def jan_cohort
   puts "These are the students in the January cohort:"
@@ -130,7 +147,7 @@ def student_information
     # Enter country information
     puts "Add additional information regarding your student: #{student[:name]}"
     puts "Enter country of birth:"
-    country = $stdin.gets.strip.capitalize
+    country = STDIN.gets.strip.capitalize
     if country.empty?
       student[:country] = "None Entered"
     else
@@ -138,7 +155,7 @@ def student_information
     end
     # Enter Height information
     puts "Enter height (cm):"
-    height = $stdin.gets.strip
+    height = STDIN.gets.strip
     if height.empty?
       student[:height] = "None Entered"
     else
@@ -146,7 +163,7 @@ def student_information
     end
     # Enter hobbies information (Can only get it to work on one line :( )
     puts "Enter hobbies:"
-    hobbies = $stdin.gets.strip
+    hobbies = STDIN.gets.strip
     if hobbies.empty?
       student[:hobbies] = "None Entered"
     else
@@ -155,14 +172,20 @@ def student_information
   end
 end
 
-def print_header
-  puts "The students of Villans Academy"
-  puts "----------"
+def print_information
+  @students.each do |student|
+    puts "--------------------------".center(29)
+    puts "#{student[:name]}".center(29)
+    puts "Additional student information:"
+    puts "Country: #{student[:country]}".center(29)
+    puts "Height: #{student[:height]}".center(30)
+    puts "Hobbies: #{student[:hobbies]}".center(31)
+  end
 end
 
 def search_letter
   puts "What letter do you want to search?"
-  letter = $stdin.gets.strip.upcase
+  letter = STDIN.gets.strip.upcase
   puts "Here are the students that start with '#{letter}':"
   @students.each do |student|
     if (student[:name].start_with? letter)
@@ -182,49 +205,5 @@ def short_name
   end
 end
 
-def print_students_list
-  student_count = @students.count
-  if student_count == 0
-    puts "No students were inputted."
-  else
-    @students.each_with_index do |student, index|
-      puts "#{index +1}. #{student[:name]} (#{student[:cohort]} cohort)"
-    end
-  end
-end
-
-def print_information
-  @students.each do |student|
-    puts "--------------------------".center(29)
-    puts "#{student[:name]}".center(29)
-    puts "Additional student information:"
-    puts "Country: #{student[:country]}".center(29)
-    puts "Height: #{student[:height]}".center(30)
-    puts "Hobbies: #{student[:hobbies]}\n".center(31)
-  end
-end
-
-def print_footer
-  count = @students.count
-  if count == 1
-    puts "Overall, we have #{count} great student."
-  elsif count == 0
-    puts ''
-  else count > 1
-    puts "Overall, we have #{@students.count} great students."
-  end
-end
-
-def save_students
-  #open the file for writing
-  file = File.open("students.csv", "w")
-  #iterate over the array of students
-  @students.each do |student|
-    student_data = [student[:name], student[:cohort]]
-    csv_line = student_data.join(",")
-    file.puts csv_line
-  end
-  file.close
-end
-
+try_load_students
 interactive_menu
