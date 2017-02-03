@@ -20,6 +20,26 @@ def load_students(filename = "students.csv")
   file.close
 end
 
+def input_students
+    puts "Please enter the names of the students."
+    puts "To finish, just hit return twice."
+    # get the first name
+    name = $stdin.gets.strip
+    # while name is not empty, repeat this code
+    while !name.empty? do
+      @students << {name: name}
+      count = @students.count
+      if count == 1
+        puts "We now have #{count} student."
+      else count > 1
+        puts "We now have #{count} students."
+      end
+      # get another name from the user
+      name = $stdin.gets.strip
+    end
+    input_cohort
+end
+
 def interactive_menu
   loop do
     print_menu
@@ -58,48 +78,45 @@ def show_students
   print_footer
 end
 
-def input_students
-    puts "Please enter the names of the students."
-    puts "To finish, just hit return twice."
-    # get the first name
-    name = $stdin.gets.strip
-    # while name is not empty, repeat this code
-    while !name.empty? do
-      @students << {name: name}
-      count = @students.count
-      if count == 1
-        puts "We now have #{count} student."
-      else count > 1
-        puts "We now have #{count} students."
-      end
-      # get another name from the user
-      name = $stdin.gets.strip
-    end
-    input_cohort
-end
-
 def input_cohort
   @students.each do |student|
     puts "Please enter the cohort for #{student[:name]}"
     cohort = $stdin.gets.strip.capitalize
-
-    puts "You entered '#{cohort}', is this correct?"
-    puts "Enter Y for yes or N for no."
-    correct = $stdin.gets.strip.upcase
-
-    until (correct == 'Y' || correct == 'N')
-      puts "Enter Y for yes or N for no."
-      correct = $stdin.gets.strip.upcase
-    end
-    if correct == "Y"
+    puts "You entered #{cohort}, is this correct? If not enter the correct cohort:"
+    check = $stdin.gets.chomp
+    while check.empty?
+      puts "Saved"
       student[:cohort] = cohort
-    else correct == "N"
-      puts "Please enter the cohort for #{student[:name]}"
-      cohort = $stdin.gets.strip.capitalize
-      student[:cohort] = cohort
+      break
+      if !check.empty?
+        input_cohort
+      end
     end
   end
 end
+
+# def input_cohort
+#   @students.each do |student|
+#     puts "Please enter the cohort for #{student[:name]}"
+#     cohort = $stdin.gets.strip.capitalize
+#
+#     puts "You entered '#{cohort}', is this correct?"
+#     puts "Enter Y for yes or N for no."
+#     correct = $stdin.gets.strip.upcase
+#
+#     until (correct == 'Y' || correct == 'N')
+#       puts "Enter Y for yes or N for no."
+#       correct = $stdin.gets.strip.upcase
+#     end
+#     if correct == "Y"
+#       student[:cohort] = cohort
+#     else correct == "N"
+#       puts "Please enter the cohort for #{student[:name]}"
+#       cohort = $stdin.gets.strip.capitalize
+#       student[:cohort] = cohort
+#     end
+#   end
+# end
 
 def jan_cohort
   puts "These are the students in the January cohort:"
