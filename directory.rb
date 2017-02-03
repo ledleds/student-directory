@@ -26,8 +26,11 @@ def process(selection)
     puts "Saving file..."
     save_students
   when "4"
-    puts "Loading students..."
+    puts "Loading students...\n"
     load_students
+    puts "\n"
+    show_students
+    puts "\n"
   when "9"
     puts "Exiting program"
     exit #This causes the program to terminate
@@ -36,42 +39,45 @@ def process(selection)
   end
 end
 
-def input_students
-    puts "Please enter the names of the students."
-    puts "To finish, just hit return twice."
-    # get the first name
-    name = STDIN.gets.strip
-    # while name is not empty, repeat this code
-    while !name.empty? do
-      @students << {name: name}
-      count = @students.count
-      if count == 1
-        puts "We now have #{count} student."
-      else count > 1
-        puts "We now have #{count} students."
-      end
-      # get another name from the user
-      name = STDIN.gets.strip
-    end
-    input_cohort
-end
+require 'Date'
 
-def input_cohort
-  @students.each do |student|
-    puts "Please enter the cohort for #{student[:name]}"
+def input_students
+  puts "Please enter the names of the students."
+  puts "To finish, just hit return twice."
+  name = STDIN.gets.strip
+  while !name.empty? do
+    puts "Please enter their cohort:"
     cohort = STDIN.gets.strip.capitalize
-    puts "You entered #{cohort}, is this correct? If not enter the correct cohort:"
-    check = STDIN.gets.chomp
-    while check.empty?
-      puts "Saved"
-      student[:cohort] = cohort
-      break
-      if !check.empty?
-        input_cohort
-      end
-    end
+
+    Date::ABBR_MONTHNAMES.include? cohort ? cohort.to_sym : cohort = :default_cohort
+    puts "We now have #{@students.count} student#{@students.count > 1 ? 's' : ''}."
+    # the add to students method adds them to @students
+    add_to_students(name, cohort)
+    puts "\n"
+    puts "Enter a new name."
+    puts "(To finish, just hit return)"
+    name = STDIN.gets.strip
   end
 end
+
+def add_to_students(name, cohort)
+  @students << {name: name, cohort: cohort}
+end
+
+# def input_cohort
+#   @students.each do |student|
+#     puts "Please enter the cohort for #{student[:name]}"
+#     cohort = STDIN.gets.strip.capitalize
+#     puts "You entered #{cohort}, is this correct? If not enter the correct cohort:"
+#     check = STDIN.gets.chomp
+#     while check.empty?
+#       puts "Saved"
+#       student[:cohort] = cohort
+#       break #if !check.empty?
+#         input_cohort
+#     end
+#   end
+# end
 
 def show_students
   print_header
@@ -80,13 +86,12 @@ def show_students
 end
 
 def print_header
-  puts "The students of Villans Academy"
-  puts "----------"
+  puts "The Students of Villains Academy"
+  puts "----------".center(30)
 end
 
 def print_student_list
-  student_count = @students.count
-  if student_count == 0
+  if @students.count == 0
     puts "No students were inputted."
   else
     @students.each_with_index do |student, index|
@@ -96,11 +101,8 @@ def print_student_list
 end
 
 def print_footer
-  count = @students.count
-  if count == 1
-    puts "Overall, we have 1 great student."
-  else
-    puts "Overall, we have #{@students.count} great students."
+  if @students.count >=1
+    puts "Overall, we have #{@students.count} great student#{@students.count > 1 ? 's' : '' }."
   end
 end
 
@@ -120,10 +122,11 @@ end
 def load_students(filename = "students.csv")
   file = File.open(filename, "r")
   file.readlines.each do |line|
-  name, cohort = line.chomp.split(',')
-    @students << {name: name, cohort: cohort.to_sym}
+    name, cohort = line.chomp.split(',')
+    add_to_students(name, cohort)
   end
   file.close
+
 end
 
 def try_load_students
