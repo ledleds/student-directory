@@ -3,8 +3,8 @@
 def print_menu
   puts "1. Input the students"
   puts "2. Show the students"
-  puts "3. Save the list to students.csv"
-  puts "4. Load the list from students.csv"
+  puts "3. Save the list to a file"
+  puts "4. Load the list from a file"
   puts "9. Exit"
 end
 
@@ -23,11 +23,11 @@ def process(selection)
     puts "Loading students..."
     show_students
   when "3"
-    puts "Saving file..."
     save_students
   when "4"
-    puts "Loading students...\n"
-    load_students
+    puts "What file would you like to load?"
+    user_file = gets.chomp.downcase
+    load_students(user_file)
     puts "\n"
     show_students
     puts "\n"
@@ -117,18 +117,19 @@ def save_students
     csv_line = student_data.join(",")
     file.puts csv_line
   end
-  puts "#{filename}.csv saved."
+  puts "#{filename}.csv was saved."
   file.close
 end
 
 def load_students(filename = "students.csv")
+  @students = []
   file = File.open(filename, "r")
   file.readlines.each do |line|
     name, cohort = line.chomp.split(',')
     add_to_students(name, cohort)
   end
+  puts "Loading #{filename}"
   file.close
-
 end
 
 def try_load_students
