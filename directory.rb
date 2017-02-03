@@ -33,7 +33,7 @@ def process(selection)
     puts "\n"
   when "9"
     puts "Exiting program"
-    exit #This causes the program to terminate
+    exit # This causes the program to terminate
   else
     puts "I don't know what you meant, try again."
   end
@@ -107,15 +107,17 @@ def print_footer
 end
 
 def save_students
+  puts "What would you like to name your file? (No need to add the file extension)"
+  filename = STDIN.gets.chomp
   #open the file for writing
-  file = File.open("students.csv", "w")
+  file = File.open(filename + ".csv", "w")
   #iterate over the array of students
   @students.each do |student|
     student_data = [student[:name], student[:cohort]]
     csv_line = student_data.join(",")
     file.puts csv_line
   end
-  puts "File saved"
+  puts "#{filename}.csv saved."
   file.close
 end
 
