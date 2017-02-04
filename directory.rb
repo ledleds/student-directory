@@ -7,6 +7,7 @@ def print_menu
   puts "2. Show the students"
   puts "3. Save the list to a file"
   puts "4. Load the list from a file"
+  puts "5. Add additional student information."
   puts "9. Exit"
 end
 
@@ -33,6 +34,8 @@ def process(selection)
     puts "\n"
     show_students
     puts "\n"
+  when "5"
+    student_information
   when "9"
     puts "Exiting program"
     exit # This causes the program to terminate
@@ -42,17 +45,18 @@ def process(selection)
 end
 
 def input_students
+  country = hobbies = height = "Not yet entered"
   puts "Please enter the names of the students."
   puts "To finish, just hit return twice."
   name = STDIN.gets.strip
   while !name.empty? do
     puts "Please enter their cohort:"
     cohort = STDIN.gets.strip.capitalize
-
+    if cohort.empty? then cohort = "Jan" end
     Date::ABBR_MONTHNAMES.include? cohort ? cohort.to_sym : cohort = :default_cohort
     puts "We now have #{@students.count} student#{@students.count > 1 ? 's' : ''}."
     # the add to students method adds them to @students
-    add_to_students(name, cohort)
+    add_to_students(name, cohort, country, height, hobbies)
     puts "\n"
     puts "Enter a new name."
     puts "(To finish, just hit return)"
@@ -60,24 +64,9 @@ def input_students
   end
 end
 
-def add_to_students(name, cohort)
-  @students << {name: name, cohort: cohort}
+def add_to_students(name, cohort, country, height, hobbies)
+  @students << {name: name, cohort: cohort, country: country, height: height, hobbies: hobbies}
 end
-
-# def input_cohort
-#   @students.each do |student|
-#     puts "Please enter the cohort for #{student[:name]}"
-#     cohort = STDIN.gets.strip.capitalize
-#     puts "You entered #{cohort}, is this correct? If not enter the correct cohort:"
-#     check = STDIN.gets.chomp
-#     while check.empty?
-#       puts "Saved"
-#       student[:cohort] = cohort
-#       break #if !check.empty?
-#         input_cohort
-#     end
-#   end
-# end
 
 def show_students
   print_header
@@ -96,6 +85,7 @@ def print_student_list
   else
     @students.each_with_index do |student, index|
       puts "#{index +1}. #{student[:name]} (#{student[:cohort]} cohort)"
+      puts "Additional information. Country of Birth: #{student[:country]}; Height: #{student[:height]}(cm); Hobbies: #{student[:hobbies]}."
     end
   end
 end
@@ -122,7 +112,7 @@ end
 def load_students(filename = "students.csv")
   @students = []
   CSV.open(filename, "r") do |file|
-    file.to_a.map {|name, cohort| add_to_students(name, cohort)}
+    file.to_a.map {|name, cohort, country, height, hobbies| add_to_students(name, cohort, country, height, hobbies)}
   end
   puts "Loading #{filename}"
 end
@@ -149,31 +139,36 @@ def jan_cohort
 end
 
 def student_information
-  @students.each do |student|
-    # Enter country information
-    puts "Add additional information regarding your student: #{student[:name]}"
-    puts "Enter country of birth:"
-    country = STDIN.gets.strip.capitalize
-    if country.empty?
-      student[:country] = "None Entered"
-    else
+  puts "Which student would you like to add information to. (Type A for all, or enter their name)"
+  student_selection = STDIN.gets.chomp
+  if student_selection == "A"
+    @students.each do |student|
+      # Enter country information
+      puts "Add additional information regarding your student: #{student[:name]}"
+      puts "Enter country of birth:"
+      country = STDIN.gets.strip.capitalize
       student[:country] = country
-    end
-    # Enter Height information
-    puts "Enter height (cm):"
-    height = STDIN.gets.strip
-    if height.empty?
-      student[:height] = "None Entered"
-    else
+      # Enter Height information
+      puts "Enter height (cm):"
+      height = STDIN.gets.strip
       student[:height] = height
-    end
-    # Enter hobbies information (Can only get it to work on one line :( )
-    puts "Enter hobbies:"
-    hobbies = STDIN.gets.strip
-    if hobbies.empty?
-      student[:hobbies] = "None Entered"
-    else
+      # Enter hobbies information (Can only get it to work on one line :( )
+      puts "Enter hobbies:"
+      hobbies = STDIN.gets.strip
       student[:hobbies] = hobbies
+      end
+  else @students.select do |student|
+      if student[:name] == student_selection
+        puts "Enter country of birth:"
+        country = STDIN.gets.strip.to_sym
+        student[:country] = country
+        puts "Enter height (cm):"
+        height = STDIN.gets.strip
+        student[:height] = height
+        puts "Enter hobbies:"
+        hobbies = STDIN.gets.strip
+        student[:hobbies] = hobbies
+      end
     end
   end
 end
