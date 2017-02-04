@@ -85,7 +85,7 @@ def print_student_list
   else
     @students.each_with_index do |student, index|
       puts "#{index +1}. #{student[:name]} (#{student[:cohort]} cohort)"
-      puts "Additional information. Country of Birth: #{student[:country]}; Height: #{student[:height]}(cm); Hobbies: #{student[:hobbies]}."
+      puts "Additional information. Country of Birth: #{student[:country]}; Height: #{student[:height]}(cm); Hobbies: #{student[:hobbies]}"
     end
   end
 end
@@ -143,34 +143,29 @@ def student_information
   student_selection = STDIN.gets.chomp
   if student_selection == "A"
     @students.each do |student|
-      # Enter country information
-      puts "Add additional information regarding your student: #{student[:name]}"
-      puts "Enter country of birth:"
-      country = STDIN.gets.strip.capitalize
-      student[:country] = country
-      # Enter Height information
-      puts "Enter height (cm):"
-      height = STDIN.gets.strip
-      student[:height] = height
-      # Enter hobbies information (Can only get it to work on one line :( )
-      puts "Enter hobbies:"
-      hobbies = STDIN.gets.strip
-      student[:hobbies] = hobbies
-      end
+      questions_for_all(student)
+    end
   else @students.select do |student|
       if student[:name] == student_selection
-        puts "Enter country of birth:"
-        country = STDIN.gets.strip.to_sym
-        student[:country] = country
-        puts "Enter height (cm):"
-        height = STDIN.gets.strip
-        student[:height] = height
-        puts "Enter hobbies:"
-        hobbies = STDIN.gets.strip
-        student[:hobbies] = hobbies
+        questions_for_all(student)
       end
     end
   end
+end
+
+def questions_for_all(student)
+    puts "Add additional information regarding your student: #{student[:name]}"
+    puts "Enter country of birth:"
+    country = STDIN.gets.strip.capitalize
+    student[:country] = country
+    # Enter Height information
+    puts "Enter height (cm):"
+    height = STDIN.gets.strip
+    student[:height] = height
+    # Enter hobbies information (Can only get it to work on one line :( )
+    puts "Enter hobbies:"
+    hobbies = STDIN.gets.strip
+    student[:hobbies] = hobbies
 end
 
 def print_information
