@@ -156,13 +156,11 @@ end
 def questions_for_all(student)
     puts "Add additional information regarding your student: #{student[:name]}"
     puts "Enter country of birth:"
-    country = STDIN.gets.strip.capitalize
+    country = STDIN.gets.strip
     student[:country] = country
-    # Enter Height information
     puts "Enter height (cm):"
     height = STDIN.gets.strip
     student[:height] = height
-    # Enter hobbies information (Can only get it to work on one line :( )
     puts "Enter hobbies:"
     hobbies = STDIN.gets.strip
     student[:hobbies] = hobbies
